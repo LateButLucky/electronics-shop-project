@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
 from src.phone import Phone
+import pytest
 
 
 def test_calculate_total_price():
@@ -59,6 +60,19 @@ def test_add():
     assert phone1 + phone1 == 10
 
 
-def test_error_number_of_sim():
-    assert ("ValueError: Количество физических SIM-карт должно быть целым числом больше нуля." ==
-            "ValueError: Количество физических SIM-карт должно быть целым числом больше нуля.")
+@pytest.fixture
+def testing_data():
+    phone = Phone("iPhone 14", 120000, 5, 2)
+    return phone
+
+
+def test_valid_number_of_sim(testing_data):
+    valid_value = 5
+    testing_data.number_of_sim = valid_value
+    assert testing_data.number_of_sim == valid_value
+
+
+def test_error_number_of_sim(testing_data):
+    invalid_value = -2
+    with pytest.raises(ValueError, match='Количество физических SIM-карт должно быть целым числом больше нуля.'):
+        testing_data.number_of_sim = invalid_value
