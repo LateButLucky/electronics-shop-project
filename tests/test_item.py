@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
 from src.phone import Phone
+from src.item import InstantiateCSVError
 import pytest
 
 
@@ -76,3 +77,18 @@ def test_error_number_of_sim(testing_data):
     invalid_value = -2
     with pytest.raises(ValueError, match='Количество физических SIM-карт должно быть целым числом больше нуля.'):
         testing_data.number_of_sim = invalid_value
+
+
+def test_broken_csv():
+    with pytest.raises(InstantiateCSVError):
+        error_file = '../src/items_error_.csv'
+        Item.instantiate_from_csv(error_file)
+
+
+def test_csv_notfound():
+    """
+    Тест проходит только если в директории src отсутствует файл items.csv
+    """
+    with pytest.raises(FileNotFoundError):
+        file = 'items.csv'
+        Item.instantiate_from_csv(file)
